@@ -30,7 +30,6 @@ const Signin = () => {
                         label="Email"
                         placeholder="Enter your email address"
                         type="email"
-                        errorMessage=" We'll never share your email with anyone else."
                         value=""
                         onChange={() => {}}
                      />

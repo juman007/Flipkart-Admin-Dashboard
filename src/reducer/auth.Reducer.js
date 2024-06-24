@@ -5,7 +5,6 @@ const initState = {
 };
 
 export default (state = initState, action) => {
-   console.log(action);
    switch (action.type) {
       case authConstants.LOGIN_REQUEST:
          state = {
@@ -16,4 +15,3 @@ export default (state = initState, action) => {
    }
    return state;
 };
- 
