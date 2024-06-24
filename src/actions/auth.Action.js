@@ -5,13 +5,14 @@ export const login = (user) => {
    return async (dispatch) => {
       dispatch({ type: authConstants.LOGIN_REQUEST });
 
-      const res = await axios.post(`api/admin/signin`, {
+      const res = await axios.post(`admin/signin`, {
          ...user,
       });
 
       if (res.status === 200) {
          const { token, user } = res.data;
          localStorage.setItem("token", token);
+         localStorage.setItem("user", JSON.stringify(user));
          dispatch({
             type: authConstants.LOGIN_SUCCESS,
             payload: {
@@ -28,6 +29,29 @@ export const login = (user) => {
                },
             });
          }
+      }
+   };
+};
+
+export const isUserLoggedIn = () => {
+   return async (dispatch) => {
+      const token = window.localStorage.getItem("token");
+      if (token) {
+         const user = JSON.parse(window.localStorage.getItem("user"));
+         dispatch({
+            type: authConstants.LOGIN_SUCCESS,
+            payload: {
+               token,
+               user,
+            },
+         });
+      } else {
+         dispatch({
+            type: authConstants.LOGIN_FAILURE,
+            payload: {
+               error: "Failed to login",
+            },
+         });
       }
    };
 };
