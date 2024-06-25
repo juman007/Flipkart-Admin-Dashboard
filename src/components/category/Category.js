@@ -1,12 +1,32 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Layout from "../Layout/Layout";
-import { Col, Container, Row } from "react-bootstrap";
+import { Button, Col, Container, Modal, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { getAllCategory } from "../../actions/action";
+import { addCategory, getAllCategory } from "../../actions/action";
+import InputComponent from "../UI/Input/inputComponent";
 
-const Category = () => {
+const Category = (props) => {
+   const [show, setShow] = useState(false);
+   const [categoryName, setCategoryName] = useState("");
+   const [parentCategoryId, setParentCategoryId] = useState("");
+   const [categoryImage, setCategoryImage] = useState("");
+
    const dispatch = useDispatch();
    const category = useSelector((state) => state.category);
+
+   const handleClose = () => {
+      const form = new FormData();
+
+      form.append("name", categoryName);
+      form.append("parentId", parentCategoryId);
+      form.append("categoryImage", categoryImage);
+
+      dispatch(addCategory(form)).then(() => {
+         dispatch(getAllCategory()); // Fetch updated categorie
+         setShow(false);
+      });
+   };
+   const handleShow = () => setShow(true);
 
    useEffect(() => {
       dispatch(getAllCategory());
@@ -32,6 +52,22 @@ const Category = () => {
       return categoryList;
    };
 
+   const createCategoryList = (categories, options = []) => {
+      categories.forEach((category) => {
+         options.push({ value: category._id, name: category.name });
+
+         if (category.children && category.children.length > 0) {
+            createCategoryList(category.children, options);
+         }
+      });
+
+      return options;
+   };
+
+   const handleCategoryImage = (e) => {
+      setCategoryImage(e.target.files[0]);
+   };
+
    return (
       <Layout sidebar>
          <Container>
@@ -44,7 +80,7 @@ const Category = () => {
                      }}
                   >
                      <h3>Category</h3>
-                     <button>Add</button>
+                     <button onClick={handleShow}>Add</button>
                   </div>
                </Col>
             </Row>
@@ -54,6 +90,50 @@ const Category = () => {
                </Col>
             </Row>
          </Container>
+
+         {/*//todo:    Model */}
+
+         <Modal show={show} onHide={handleClose}>
+            <Modal.Header closeButton>
+               <Modal.Title>Add New Category</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+               {/* //todo:   new Category */}
+               <InputComponent
+                  value={categoryName}
+                  onChange={(e) => setCategoryName(e.target.value)}
+                  placeholder={"Category Name"}
+               />
+
+               {/* //todo       select parent Category */}
+
+               <select
+                  className="form-control"
+                  value={parentCategoryId}
+                  onChange={(e) => setParentCategoryId(e.target.value)}
+               >
+                  <option>Select Category</option>
+                  {createCategoryList(category.categories).map((option) => (
+                     <option key={option.value} value={option.value}>
+                        {option.name}
+                     </option>
+                  ))}
+               </select>
+
+               {/* //todo:     category Image */}
+
+               <input
+                  type="file"
+                  name="categoryImage"
+                  onChange={handleCategoryImage}
+               />
+            </Modal.Body>
+            <Modal.Footer>
+               <Button variant="primary" onClick={handleClose}>
+                  Save Changes
+               </Button>
+            </Modal.Footer>
+         </Modal>
       </Layout>
    );
 };
