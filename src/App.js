@@ -7,6 +7,8 @@ import Signup from "./containers/Signup/Signup";
 import PrivateRoute from "./components/HOC/PrivateRoute";
 import { useDispatch, useSelector } from "react-redux";
 import { isUserLoggedIn } from "./actions/auth.Action";
+import Products from "./containers/Products/Products";
+import Orders from "./containers/Orders/Orders";
 
 function App() {
    const dispatch = useDispatch();
@@ -16,7 +18,7 @@ function App() {
       if (!auth.authentiate) {
          dispatch(isUserLoggedIn());
       }
-   },[]);
+   }, []);
 
    return (
       <div className="App">
@@ -27,6 +29,22 @@ function App() {
                   element={
                      <PrivateRoute>
                         <Home />
+                     </PrivateRoute>
+                  }
+               />
+               <Route
+                  path="/products"
+                  element={
+                     <PrivateRoute>
+                        <Products />
+                     </PrivateRoute>
+                  }
+               />
+               <Route
+                  path="/orders"
+                  element={
+                     <PrivateRoute>
+                        <Orders />
                      </PrivateRoute>
                   }
                />
