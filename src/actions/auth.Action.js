@@ -1,3 +1,4 @@
+import { type } from "@testing-library/user-event/dist/type/index.js";
 import axios from "../helpers/axios.js";
 import { authConstants } from "./constant.Action";
 
@@ -53,5 +54,14 @@ export const isUserLoggedIn = () => {
             },
          });
       }
+   };
+};
+
+export const signout = () => {
+   return async (dispatch) => {
+      window.localStorage.clear();
+      dispatch({
+         type: authConstants.LOGOUT_REQUEST,
+      });
    };
 };

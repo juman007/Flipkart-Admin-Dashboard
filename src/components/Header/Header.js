@@ -3,9 +3,46 @@ import { Link, NavLink } from "react-router-dom";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
-import NavDropdown from "react-bootstrap/NavDropdown";
+import { useDispatch, useSelector } from "react-redux";
+import { signout } from "../../actions/auth.Action";
 
 const Header = () => {
+   const auth = useSelector((state) => state.auth);
+   const dispatch = useDispatch();
+
+   const logout = () => {
+      dispatch(signout());
+   };
+
+   const renderLoggedInLinks = () => {
+      return (
+         <Nav>
+            <li className=" nav-item">
+               <span className="nav-link text-light" onClick={logout}>
+                  Signout
+               </span>
+            </li>
+         </Nav>
+      );
+   };
+
+   const renderNonLoggedInLinks = () => {
+      return (
+         <Nav>
+            <li className=" nav-item">
+               <NavLink to="/signin" className="nav-link text-light">
+                  Signin
+               </NavLink>
+            </li>
+            <li className=" nav-item">
+               <NavLink to="/signup" className="nav-link text-light">
+                  Signup
+               </NavLink>
+            </li>
+         </Nav>
+      );
+   };
+
    return (
       <>
          <Navbar
@@ -45,22 +82,9 @@ const Header = () => {
                         </NavDropdown.Item>
                      </NavDropdown> */}
                   </Nav>
-                  <Nav>
-                     {/* <Nav.Link href="#deets" className="text-light">
-                        Signin
-                     </Nav.Link> */}
-
-                     <li className=" nav-item">
-                        <NavLink to="/signin" className="nav-link text-light">
-                           Signin
-                        </NavLink>
-                     </li>
-                     <li className=" nav-item">
-                        <NavLink to="/signup" className="nav-link text-light">
-                           Signup
-                        </NavLink>
-                     </li>
-                  </Nav>
+                  {auth.authenticate
+                     ? renderLoggedInLinks()
+                     : renderNonLoggedInLinks()}
                </Navbar.Collapse>
             </Container>
          </Navbar>
