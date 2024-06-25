@@ -4,8 +4,16 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import { Col, Container, Row } from "react-bootstrap";
 import InputComponent from "../../components/UI/Input/inputComponent";
+import { Navigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const Signup = (props) => {
+   const auth = useSelector((state) => state.auth);
+
+   if (auth.authenticate) {
+      return <Navigate to={"/"} />;
+   }
+
    return (
       <Layout>
          <Container>

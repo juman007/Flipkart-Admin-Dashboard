@@ -8,7 +8,12 @@ import NavDropdown from "react-bootstrap/NavDropdown";
 const Header = () => {
    return (
       <>
-         <Navbar collapseOnSelect expand="lg" className="bg-primary">
+         <Navbar
+            collapseOnSelect
+            expand="lg"
+            className="bg-primary"
+            style={{ zIndex: 1 }}
+         >
             <Container>
                {/* <Navbar.Brand href="#home" className="text-light">
                   Admin Dashboard
