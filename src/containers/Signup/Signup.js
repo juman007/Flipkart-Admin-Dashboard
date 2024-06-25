@@ -7,6 +7,7 @@ import InputComponent from "../../components/UI/Input/inputComponent";
 import { Navigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { signup } from "../../actions/user.Action";
+import Spinner from "../../components/Spinner/Spinner";
 
 const Signup = (props) => {
    const [firstName, setFirstName] = useState("");
@@ -40,7 +41,7 @@ const Signup = (props) => {
    }
 
    if (user.loading) {
-      return <p>Loading...!</p>;
+      return <Spinner />;
    }
 
    return (
