@@ -17,6 +17,7 @@ const Products = (props) => {
 
    const dispatch = useDispatch();
    const category = useSelector((state) => state.category);
+   const product = useSelector((state) => state.product);
 
    const handleClose = () => {
       const form = new FormData();
@@ -71,15 +72,18 @@ const Products = (props) => {
                </tr>
             </thead>
             <tbody>
-               <tr>
-                  <td>1</td>
-                  <td>Table cell</td>
-                  <td>Table cell</td>
-                  <td>Table cell</td>
-                  <td>Table cell</td>
-                  <td>Table cell</td>
-                  <td>Table cell</td>
-               </tr>
+               {product.products.length > 0
+                  ? product.products.map((p, index) => (
+                       <tr key={p._id}>
+                          <td>{index + 1}</td>
+                          <td>{p.name}</td>
+                          <td>{p.price}</td>
+                          <td>{p.quantity}</td>
+                          <td>{p.description}</td>
+                          <td>--</td>
+                       </tr>
+                    ))
+                  : null}
             </tbody>
          </Table>
       );

@@ -9,7 +9,7 @@ export default (state = initState, action) => {
       case productConstants.GET_ALL_PRODUCTS_SUCCESS:
          state = {
             ...state,
-            prdoducts: action.payload.products,
+            products: action.payload.products,
          };
          break;
    }
