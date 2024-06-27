@@ -10,7 +10,7 @@ import { isUserLoggedIn } from "./actions/auth.Action";
 import Products from "./containers/Products/Products";
 import Orders from "./containers/Orders/Orders";
 import Category from "./components/category/Category";
-import { getAllCategory } from "./actions/category.Action";
+import { getInitialData } from "./actions/initialData.Action";
 
 function App() {
    const dispatch = useDispatch();
@@ -20,7 +20,7 @@ function App() {
       if (!auth.authentiate) {
          dispatch(isUserLoggedIn());
       }
-      dispatch(getAllCategory());
+      dispatch(getInitialData());
    }, []);
 
    return (

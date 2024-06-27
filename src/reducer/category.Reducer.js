@@ -50,11 +50,11 @@ const buildNewCategories = (parentId, categories, category) => {
                : [],
          });
       }
-
-      return myCategory;
    }
+   return myCategory;
 };
 
+// eslint-disable-next-line import/no-anonymous-default-export
 export default (state = initState, action) => {
    switch (action.type) {
       case categoryConstants.GET_ALL_CATEGORIES_SUCCESS:
@@ -71,22 +71,29 @@ export default (state = initState, action) => {
          break;
       case categoryConstants.ADD_NEW_CATEGORIES_SUCCESS:
          const category = action.payload.category;
-         const updatedCategory = buildNewCategories(
-            state.categories,
-            category,
-            category.parentId
-         );
-         console.log(updatedCategory);
-         state = {
-            ...state,
-            categories: updatedCategory,
-            loading: false,
-         };
+         // Check if category and category.parentId are defined to avoid TypeError
+         if (category && category.parentId !== undefined) {
+            // Fixing the argument order in the call to buildNewCategories
+            const updatedCategory = buildNewCategories(
+               category.parentId, // parentId should be the first argument
+               state.categories, // categories should be the second argument
+               category // category should be the third argument
+            );
+            console.log(updatedCategory);
+            state = {
+               ...state,
+               categories: updatedCategory,
+               loading: false,
+            };
+         }
          break;
       case categoryConstants.ADD_NEW_CATEGORIES_FAILURE:
          state = {
             ...initState,
          };
+         break;
+      default:
+         break; // Added default case to handle unspecified actions
    }
    return state;
 };

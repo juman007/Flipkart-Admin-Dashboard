@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Layout from "../../components/Layout/Layout";
-import { Button, Col, Container, Modal, Row } from "react-bootstrap";
+import { Button, Col, Container, Modal, Row, Table } from "react-bootstrap";
 import InputComponent from "../../components/UI/Input/inputComponent";
 import { useDispatch, useSelector } from "react-redux";
 import { addProduct } from "../../actions/product.Action";
@@ -55,7 +55,36 @@ const Products = (props) => {
          setProductPictures([...productPictures, e.target.files[0]]);
       }
    };
-   console.log(productPictures);
+
+   const renderProducts = () => {
+      return (
+         <Table responsive="sm">
+            <thead>
+               <tr>
+                  <th>#</th>
+                  <th>Name</th>
+                  <th>Price</th>
+                  <th>Quantity</th>
+                  <th>Description</th>
+                  <th>Table Product Picture</th>
+                  <th>Category</th>
+               </tr>
+            </thead>
+            <tbody>
+               <tr>
+                  <td>1</td>
+                  <td>Table cell</td>
+                  <td>Table cell</td>
+                  <td>Table cell</td>
+                  <td>Table cell</td>
+                  <td>Table cell</td>
+                  <td>Table cell</td>
+               </tr>
+            </tbody>
+         </Table>
+      );
+   };
+
    return (
       <Layout sidebar>
          <Container>
@@ -71,6 +100,10 @@ const Products = (props) => {
                      <button onClick={handleShow}>Add</button>
                   </div>
                </Col>
+            </Row>
+
+            <Row>
+               <Col>{renderProducts()}</Col>
             </Row>
          </Container>
 
