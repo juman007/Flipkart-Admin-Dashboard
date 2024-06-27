@@ -4,6 +4,7 @@ import { Button, Col, Container, Modal, Row } from "react-bootstrap";
 import InputComponent from "../../components/UI/Input/inputComponent";
 import { useDispatch, useSelector } from "react-redux";
 import { addProduct } from "../../actions/product.Action";
+import NewModel from "../../components/UI/Model/Model";
 
 const Products = (props) => {
    const [name, setName] = useState("");
@@ -75,70 +76,65 @@ const Products = (props) => {
 
          {/*//todo:    Model */}
 
-         <Modal show={show} onHide={handleClose}>
-            <Modal.Header closeButton>
-               <Modal.Title>Add New Category</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-               <InputComponent
-                  label="Name"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder={"Product Name"}
-               />
+         <NewModel
+            show={show}
+            modelTitle="Add Product"
+            handleClose={handleClose}
+            button="Add Product"
+         >
+            <InputComponent
+               label="Name"
+               value={name}
+               onChange={(e) => setName(e.target.value)}
+               placeholder={"Product Name"}
+            />
 
-               <InputComponent
-                  label="Quantity"
-                  value={quantity}
-                  onChange={(e) => setQuantity(e.target.value)}
-                  placeholder={"Product quantity"}
-               />
+            <InputComponent
+               label="Quantity"
+               value={quantity}
+               onChange={(e) => setQuantity(e.target.value)}
+               placeholder={"Product quantity"}
+            />
 
-               <InputComponent
-                  label="Price"
-                  value={price}
-                  onChange={(e) => setPrice(e.target.value)}
-                  placeholder={"Product price"}
-               />
+            <InputComponent
+               label="Price"
+               value={price}
+               onChange={(e) => setPrice(e.target.value)}
+               placeholder={"Product price"}
+            />
 
-               <InputComponent
-                  label="Description"
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  placeholder={"Product Description"}
-               />
+            <InputComponent
+               label="Description"
+               value={description}
+               onChange={(e) => setDescription(e.target.value)}
+               placeholder={"Product Description"}
+            />
 
-               <select
-                  className="form-control"
-                  value={categoryId}
-                  onChange={(e) => setCategoryId(e.target.value)}
-               >
-                  <option>Select Category</option>
-                  {createCategoryList(category.categories).map((option) => (
-                     <option key={option.value} value={option.value}>
-                        {option.name}
-                     </option>
-                  ))}
-               </select>
+            <select
+               className="form-control"
+               value={categoryId}
+               onChange={(e) => setCategoryId(e.target.value)}
+            >
+               <option>Select Category</option>
+               {createCategoryList(category.categories).map((option) => (
+                  <option key={option.value} value={option.value}>
+                     {option.name}
+                  </option>
+               ))}
+            </select>
 
-               {productPictures.length > 0
-                  ? productPictures.map((pic, index) => (
-                       <div key={index}>{JSON.stringify(pic.name)}</div>
-                    ))
-                  : ""}
+            {productPictures.length > 0
+               ? productPictures.map((pic, index) => (
+                    <div key={index}>{JSON.stringify(pic.name)}</div>
+                 ))
+               : ""}
 
-               <input
-                  type="file"
-                  name="productPictures"
-                  onChange={handleProductPicture}
-               />
-            </Modal.Body>
-            <Modal.Footer>
-               <Button variant="primary" onClick={handleClose}>
-                  Add Product
-               </Button>
-            </Modal.Footer>
-         </Modal>
+            <input
+               type="file"
+               name="productPictures"
+               onChange={handleProductPicture}
+            />
+         </NewModel>
       </Layout>
    );
 };
