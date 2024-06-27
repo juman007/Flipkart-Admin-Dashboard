@@ -28,9 +28,7 @@ const Category = (props) => {
    };
    const handleShow = () => setShow(true);
 
-   useEffect(() => {
-      dispatch(getAllCategory());
-   }, []);
+   
 
    const renderCategories = (categories) => {
       let categoryList = [];

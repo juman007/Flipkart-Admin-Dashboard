@@ -24,7 +24,7 @@ const Products = (props) => {
       form.append("quantity", quantity);
       form.append("price", price);
       form.append("description", description);
-      form.append("categoryId", categoryId);
+      form.append("category", categoryId);
 
       for (let pic of productPictures) {
          form.append("productPictures", pic);
