@@ -54,6 +54,7 @@ const Header = () => {
             expand="lg"
             className="bg-primary"
             style={{ zIndex: 1 }}
+            fixed="top"
          >
             <Container>
                {/* <Navbar.Brand href="#home" className="text-light">

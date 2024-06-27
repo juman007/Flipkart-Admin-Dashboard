@@ -24,11 +24,13 @@ const Category = (props) => {
       dispatch(addCategory(form)).then(() => {
          dispatch(getAllCategory()); // Fetch updated categorie
          setShow(false);
+
+         setCategoryName("");
+         setParentCategoryId("");
+         setCategoryImage("");
       });
    };
    const handleShow = () => setShow(true);
-
-   
 
    const renderCategories = (categories) => {
       let categoryList = [];
@@ -128,7 +130,7 @@ const Category = (props) => {
             </Modal.Body>
             <Modal.Footer>
                <Button variant="primary" onClick={handleClose}>
-                  Save Changes
+                  Add Category
                </Button>
             </Modal.Footer>
          </Modal>

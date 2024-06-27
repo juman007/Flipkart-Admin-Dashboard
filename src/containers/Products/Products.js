@@ -135,7 +135,7 @@ const Products = (props) => {
             </Modal.Body>
             <Modal.Footer>
                <Button variant="primary" onClick={handleClose}>
-                  Save Changes
+                  Add Product
                </Button>
             </Modal.Footer>
          </Modal>
