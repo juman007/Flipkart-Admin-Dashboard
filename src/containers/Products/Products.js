@@ -5,6 +5,8 @@ import InputComponent from "../../components/UI/Input/inputComponent";
 import { useDispatch, useSelector } from "react-redux";
 import { addProduct } from "../../actions/product.Action";
 import NewModel from "../../components/UI/Model/Model";
+import "./product.css";
+import { generatePublicUrl } from "../../urlConfig";
 
 const Products = (props) => {
    const [name, setName] = useState("");
@@ -13,6 +15,8 @@ const Products = (props) => {
    const [description, setDescription] = useState("");
    const [categoryId, setCategoryId] = useState("");
    const [productPictures, setProductPictures] = useState([]); //
+   const [productDetailModel, setProductDetailModel] = useState(false); //
+   const [productDetails, setProductDetails] = useState(null); //
    const [show, setShow] = useState(false);
 
    const dispatch = useDispatch();
@@ -59,28 +63,28 @@ const Products = (props) => {
 
    const renderProducts = () => {
       return (
-         <Table responsive="sm">
+         <Table responsive="sm" style={{ fontSize: "14px" }}>
             <thead>
                <tr>
                   <th>#</th>
                   <th>Name</th>
                   <th>Price</th>
                   <th>Quantity</th>
-                  <th>Description</th>
-                  <th>Table Product Picture</th>
                   <th>Category</th>
                </tr>
             </thead>
             <tbody>
                {product.products.length > 0
                   ? product.products.map((p, index) => (
-                       <tr key={p._id}>
+                       <tr
+                          onClick={() => ShowProductDetailsModel(p)}
+                          key={p._id}
+                       >
                           <td>{index + 1}</td>
                           <td>{p.name}</td>
                           <td>{p.price}</td>
                           <td>{p.quantity}</td>
-                          <td>{p.description}</td>
-                          <td>--</td>
+                          <td>{p.category.name}</td>
                        </tr>
                     ))
                   : null}
@@ -89,29 +93,9 @@ const Products = (props) => {
       );
    };
 
-   return (
-      <Layout sidebar>
-         <Container>
-            <Row>
-               <Col md={12}>
-                  <div
-                     style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                     }}
-                  >
-                     <h3>Add Product</h3>
-                     <button onClick={handleShow}>Add</button>
-                  </div>
-               </Col>
-            </Row>
-
-            <Row>
-               <Col>{renderProducts()}</Col>
-            </Row>
-         </Container>
-
-         {/*//todo:    Model */}
+   const renderAddProductModel = () => {
+      return (
+         // todo: Model
 
          <NewModel
             show={show}
@@ -172,6 +156,95 @@ const Products = (props) => {
                onChange={handleProductPicture}
             />
          </NewModel>
+      );
+   };
+
+   const handleCloseProductDetailModel = () => {
+      setProductDetailModel(false);
+   };
+
+   const ShowProductDetailsModel = (p) => {
+      setProductDetails(p);
+      setProductDetailModel(true);
+      console.log(p);
+   };
+
+   const renderShowProductDetailsModel = () => {
+      if (!productDetails) {
+         return null;
+      }
+
+      return (
+         <NewModel
+            show={productDetailModel}
+            handleClose={handleCloseProductDetailModel}
+            modelTitle={"Product Details"}
+            button={"Close Product Details"}
+            size="lg"
+         >
+            <Row>
+               <Col md="6">
+                  <label className="key">Name</label>
+                  <p className="value"> {productDetails.name}</p>
+               </Col>
+               <Col md="6">
+                  <label className="key">Price</label>
+                  <p className="value"> {productDetails.price}</p>
+               </Col>
+               <Col md="6">
+                  <label className="key">Quantity</label>
+                  <p className="value"> {productDetails.quantity}</p>
+               </Col>
+               <Col md="6">
+                  <label className="key">Category</label>
+                  <p className="value"> {productDetails.category.name}</p>
+               </Col>
+               <Col md="12">
+                  <label className="key">Description</label>
+                  <p className="value"> {productDetails.description}</p>
+               </Col>
+               <Col md="12">
+                  <label className="key">Product Pictures</label>
+                  <div style={{ display: "flex" }}>
+                     {productDetails.productPictures.map((p, index) => (
+                        <div key={index} className="productImgContainer">
+                           <img
+                              src={generatePublicUrl(p.img)}
+                              alt="product"
+                              style={{ maxWidth: "100px" }}
+                           />
+                        </div>
+                     ))}
+                  </div>
+               </Col>
+            </Row>
+         </NewModel>
+      );
+   };
+
+   return (
+      <Layout sidebar>
+         <Container>
+            <Row>
+               <Col md={12}>
+                  <div
+                     style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                     }}
+                  >
+                     <h3>Add Product</h3>
+                     <button onClick={handleShow}>Add</button>
+                  </div>
+               </Col>
+            </Row>
+
+            <Row>
+               <Col>{renderProducts()}</Col>
+            </Row>
+         </Container>
+         {renderAddProductModel()}
+         {renderShowProductDetailsModel()}
       </Layout>
    );
 };
