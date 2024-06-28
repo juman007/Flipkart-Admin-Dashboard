@@ -21,6 +21,8 @@ export const login = (user) => {
                user,
             },
          });
+         //todo: Refresh the page after successful login
+         window.location.reload();
       } else {
          if (res.status === 400) {
             dispatch({
@@ -59,24 +61,24 @@ export const isUserLoggedIn = () => {
 
 export const signout = () => {
    return async (dispatch) => {
-      dispatch({
-         type: authConstants.LOGOUT_REQUEST,
-      });
+      dispatch({ type: authConstants.LOGOUT_REQUEST });
 
-      const res = await axios.post(`admin/signout`);
+      try {
+         const res = await axios.post(`admin/signout`);
 
-      if (res.status === 200) {
-         window.localStorage.clear();
-
-         dispatch({
-            type: authConstants.LOGOUT_SUCCESS,
-         });
-      } else {
+         if (res.status === 200) {
+            window.localStorage.clear();
+            dispatch({ type: authConstants.LOGOUT_SUCCESS });
+         } else {
+            dispatch({
+               type: authConstants.LOGOUT_FAILURE,
+               payload: { error: res.data.error || "Failed to logout" },
+            });
+         }
+      } catch (error) {
          dispatch({
             type: authConstants.LOGOUT_FAILURE,
-            payload: {
-               error: "Failed to logout",
-            },
+            payload: { error: error.message || "Failed to logout" },
          });
       }
    };
