@@ -82,7 +82,7 @@ const Products = (props) => {
                        >
                           <td>{index + 1}</td>
                           <td>{p.name}</td>
-                          <td>{p.price}</td>
+                          <td>{p.price.toLocaleString()}</td>
                           <td>{p.quantity}</td>
                           <td>{p.category.name}</td>
                        </tr>
@@ -189,7 +189,10 @@ const Products = (props) => {
                </Col>
                <Col md="6">
                   <label className="key">Price</label>
-                  <p className="value"> {productDetails.price}</p>
+                  <p className="value">
+                     {" "}
+                     {productDetails.price.toLocaleString()}
+                  </p>
                </Col>
                <Col md="6">
                   <label className="key">Quantity</label>
