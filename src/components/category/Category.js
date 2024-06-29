@@ -5,12 +5,27 @@ import { useDispatch, useSelector } from "react-redux";
 import { addCategory, getAllCategory } from "../../actions/action";
 import InputComponent from "../UI/Input/inputComponent";
 import NewModel from "../UI/Model/Model";
+import CheckboxTree from "react-checkbox-tree";
+import {
+   IoIosCheckboxOutline,
+   IoIosCheckbox,
+   IoIosArrowDown,
+   IoIosArrowForward,
+} from "react-icons/io";
+
+import "react-checkbox-tree/lib/react-checkbox-tree.css";
+import { CgLaptop } from "react-icons/cg";
 
 const Category = (props) => {
    const [show, setShow] = useState(false);
    const [categoryName, setCategoryName] = useState("");
    const [parentCategoryId, setParentCategoryId] = useState("");
    const [categoryImage, setCategoryImage] = useState("");
+   const [checked, setChecked] = useState([]);
+   const [expanded, setExpanded] = useState([]);
+   const [checkedArray, setCheckedArray] = useState([]);
+   const [expandedArray, setExpandedArray] = useState([]);
+   const [updateCategoryModel, setUpdateCategoryModel] = useState(false);
 
    const dispatch = useDispatch();
    const category = useSelector((state) => state.category);
@@ -36,26 +51,26 @@ const Category = (props) => {
    const renderCategories = (categories) => {
       let categoryList = [];
 
-      for (let cat of categories) {
-         categoryList.push(
-            <li key={cat._id}>
-               {cat.name}
-
-               <ul>
-                  {cat.children && cat.children.length > 0 ? (
-                     <ul>{renderCategories(cat.children)}</ul>
-                  ) : null}
-               </ul>
-            </li>
-         );
-      }
+      categories.forEach((cat) => {
+         let node = {
+            label: cat.name,
+            value: cat._id,
+            children:
+               cat.children.length > 0 ? renderCategories(cat.children) : [],
+         };
+         categoryList.push(node);
+      });
 
       return categoryList;
    };
 
    const createCategoryList = (categories, options = []) => {
       categories.forEach((category) => {
-         options.push({ value: category._id, name: category.name });
+         options.push({
+            value: category._id,
+            name: category.name,
+            parentId: category.parentId,
+         });
 
          if (category.children && category.children.length > 0) {
             createCategoryList(category.children, options);
@@ -67,6 +82,12 @@ const Category = (props) => {
 
    const handleCategoryImage = (e) => {
       setCategoryImage(e.target.files[0]);
+   };
+
+   const updateCategory = () => {
+      setUpdateCategoryModel(true);
+      const categories = createCategoryList(category.categories);
+      console.log(categories, checked, expanded);
    };
 
    return (
@@ -86,8 +107,29 @@ const Category = (props) => {
                </Col>
             </Row>
             <Row>
-               <Col>
+               {/* <Col>
                   <ul>{renderCategories(category.categories)}</ul>{" "}
+               </Col> */}
+               <CheckboxTree
+                  nodes={renderCategories(category.categories)}
+                  checked={checked}
+                  expanded={expanded}
+                  onCheck={(checked) => setChecked(checked)}
+                  onExpand={(expanded) => setExpanded(expanded)}
+                  icons={{
+                     check: <IoIosCheckbox />,
+                     uncheck: <IoIosCheckboxOutline />,
+                     halfCheck: <IoIosCheckboxOutline />,
+                     expandClose: <IoIosArrowForward />,
+                     expandOpen: <IoIosArrowDown />,
+                  }}
+               />
+            </Row>
+
+            <Row>
+               <Col>
+                  <button>Delete</button>
+                  <button onClick={updateCategory}>Update</button>
                </Col>
             </Row>
          </Container>
@@ -128,6 +170,66 @@ const Category = (props) => {
                name="categoryImage"
                onChange={handleCategoryImage}
             />
+         </NewModel>
+
+         {/* //!   edit category */}
+
+         <NewModel
+            show={updateCategoryModel}
+            handleClose={() => setUpdateCategoryModel(false)}
+            modelTitle={"Update Category"}
+            button={"Update Category"}
+            size="lg"
+         >
+            {/* <Row>
+               <col>
+                  <h6>Expended</h6>
+               </col>
+            </Row> */}
+
+            <Row>
+               {/* //todo:   new Category */}
+               <Col>
+                  <InputComponent
+                     value={categoryName}
+                     onChange={(e) => setCategoryName(e.target.value)}
+                     placeholder={"Category Name"}
+                  />
+               </Col>
+
+               {/* //todo       select parent Category */}
+               <Col>
+                  <select
+                     className="form-control"
+                     value={parentCategoryId}
+                     onChange={(e) => setParentCategoryId(e.target.value)}
+                  >
+                     <option>Select Category</option>
+                     {createCategoryList(category.categories).map((option) => (
+                        <option key={option.value} value={option.value}>
+                           {option.name}
+                        </option>
+                     ))}
+                  </select>
+               </Col>
+
+               <Col>
+                  <select className="form-control">
+                     <option value="">Select Type</option>
+                     <option value="store">Store</option>
+                     <option value="product">Product</option>
+                     <option value="page">Page</option>
+                  </select>
+               </Col>
+            </Row>
+
+            {/* //todo:     category Image */}
+
+            {/* <input
+               type="file"
+               name="categoryImage"
+               onChange={handleCategoryImage}
+            /> */}
          </NewModel>
       </Layout>
    );
